@@ -1,5 +1,6 @@
 package pacManUI;
 
+import PacmanGame.PacmanPlay;
 import Util.ButtonUtil;
 import Util.ScreenUtil;
 
@@ -66,5 +67,6 @@ public class MainMenu {
     public static void main(String[] args) {
         MainMenu mainMenu = new MainMenu();
         mainMenu.showMainMenu();
+
     }
 }

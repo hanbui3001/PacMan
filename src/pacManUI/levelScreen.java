@@ -1,9 +1,12 @@
 package pacManUI;
 
+import PacmanGame.PacmanMain;
 import Util.ButtonUtil;
 import Util.ScreenUtil;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class levelScreen {
     private final JFrame screen = new JFrame("Level");
@@ -12,9 +15,9 @@ public class levelScreen {
     private final JButton buttonHard = new JButton("HARD");
     private final JButton buttonBack = new JButton("Back");
     private final MainMenu mainMenu;
-
+    private  PacmanMain pacmanMain = new PacmanMain();
     public levelScreen(MainMenu mainMenu) {
-        this.mainMenu = mainMenu; // Tham chiếu tới Test để quay lại
+        this.mainMenu = mainMenu;// Tham chiếu tới Test để quay lại
         setupLevelScreen();
     }
 
@@ -43,7 +46,15 @@ public class levelScreen {
             screen.setVisible(false); // Ẩn levelScreen
             mainMenu.showMainMenu(); // Hiển thị lại menu
         });
+        //
+        buttonEasy.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                pacmanMain.showGame();
+                screen.setVisible(false);
 
+            }
+        });
         background.add(buttonEasy);
         background.add(buttonMedium);
         background.add(buttonHard);
