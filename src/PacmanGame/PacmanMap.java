@@ -26,6 +26,7 @@ public class PacmanMap {
                     "X XXXXXX X XXXXXX X",
                     "X                 X",
                     "XXXXXXXXXXXXXXXXXXX"
+
             },
             {
                     "XXXXXXXXXXXXXXXXXXX",
@@ -56,7 +57,7 @@ public class PacmanMap {
                     "X XXXXX X XXXXX X X",
                     "X        P        X",
                     "XXXXX XXXXXXX XXXXX",
-                    "X    X       X    X",
+                    "X                 X",
                     "X XX X XXXXX X XX X",
                     "X XX X       X XX X",
                     "X XX X XXrXX X XX X",
@@ -67,7 +68,7 @@ public class PacmanMap {
                     "X                 X",
                     "XXXXX XXXXXXX XXXXX",
                     "X                 X",
-                    "X XXXXXXXXXXXXXXXXX",
+                    "X XXXXXXXXXXXXXXX X",
                     "X                OX",
                     "XXXXXXXXXXXXXXXXXXX",
                     "XO               OX",

@@ -10,6 +10,9 @@ public class Block {
     private char intendedDirection = 'W';
     private int velocityX = 0, velocityY = 0;
     private int tileSize = 32;
+    private int moveCounter = 0;
+    private static final int DIRECTION = 7;
+    private char previousDirection = ' ';
 
     public Block() {}
     public Block(int x, int y, int width, int height, Image image) {
@@ -36,16 +39,24 @@ public class Block {
     public void setY(int y) { this.y = y; }
     public void setImage(Image image) { this.image = image; }
 
+    public char getPreviousDirection() {
+        return previousDirection;
+    }
+
     public void updateDirection(char newDirection, PacmanPlay pacman) {
+        previousDirection = direction;
         this.intendedDirection = newDirection;
         updateVelocityAndMove(pacman);
     }
 
     public void updateVelocityAndMove(PacmanPlay pacman) {
+        moveCounter ++;
         char tempDirection = intendedDirection;
-        setVelocity(tempDirection);
+        setVelocity(intendedDirection, pacman.getSpeed(this));
         int newX = this.x + velocityX;
         int newY = this.y + velocityY;
+
+
         Block tempBlock = new Block(newX, newY, width, height, image);
 
         boolean canMoveIntended = true;
@@ -61,7 +72,7 @@ public class Block {
             this.x = newX;
             this.y = newY;
         } else {
-            setVelocity(direction);
+            setVelocity(direction, pacman.getSpeed(this));
             newX = this.x + velocityX;
             newY = this.y + velocityY;
             tempBlock = new Block(newX, newY, width, height, image);
@@ -78,30 +89,41 @@ public class Block {
                 this.x = newX;
                 this.y = newY;
             }
+            else{
+                velocityX = 0;
+                velocityY = 0;
+            }
         }
+        //System.out.println("intendedDirection = " + intendedDirection);
     }
 
-    private void setVelocity(char dir) {
+    public void setVelocity(char dir, int speed) {
         switch (dir) {
             case 'W':
                 velocityX = 0;
-                velocityY = -tileSize / 4;
+                velocityY = -speed;
                 break;
             case 'S':
                 velocityX = 0;
-                velocityY = tileSize / 4;
+                velocityY = speed;
                 break;
             case 'A':
-                velocityX = -tileSize / 4;
+                velocityX = -speed;
                 velocityY = 0;
                 break;
             case 'D':
-                velocityX = tileSize / 4;
+                velocityX = speed;
                 velocityY = 0;
                 break;
             default:
                 velocityX = 0;
                 velocityY = 0;
         }
+    }
+    public boolean changeDirection(){
+        return moveCounter >= DIRECTION;
+    }
+    public void resetMoveCounter(){
+        moveCounter = 0;
     }
 }

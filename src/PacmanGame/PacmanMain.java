@@ -28,7 +28,7 @@ public class PacmanMain {
         frame.revalidate();
         frame.setVisible(true);
         PacmanPlay pacmanPlay = (PacmanPlay) frame.getContentPane().getComponent(0);
-        pacmanPlay.requestFocusInWindow(); // Đảm bảo tiêu điểm sau khi hiển thị
+        pacmanPlay.requestFocusInWindow();
     }
 
     public static void main(String[] args) {
