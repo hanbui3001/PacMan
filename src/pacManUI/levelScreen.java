@@ -55,6 +55,20 @@ public class levelScreen {
 
             }
         });
+        buttonMedium.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                pacmanMain.showGame();
+                screen.setVisible(false);
+            }
+        });
+        buttonHard.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                pacmanMain.showGame();
+                screen.setVisible(false);
+            }
+        });
         background.add(buttonEasy);
         background.add(buttonMedium);
         background.add(buttonHard);

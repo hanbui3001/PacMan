@@ -12,6 +12,8 @@ public class MainMenu {
     private final JFrame menu = new JFrame();
     private final JButton buttonStart = new JButton("Start");
     private final JButton buttonGuide = new JButton("Guide");
+    private final JButton buttonLeader = new JButton("Ranking");
+    private final JButton buttonExit = new JButton("Exit");
     private final GuideScreen guideScreen = new GuideScreen();
     private final levelScreen levelScreen;
 
@@ -22,22 +24,30 @@ public class MainMenu {
 
     private void setupMainMenu() {
         menu.setLayout(null);
-        String imagePath = "/image/pac-man-thumb.jpg";
+        String imagePath = "/image/pacman-thumb1.jpg";
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource(imagePath));
         JLabel pic = new JLabel(backgroundImage);
         pic.setLayout(null);
         pic.setSize(new ScreenUtil().getDimension());
 
-        buttonStart.setBounds(140, 180, 200, 50);
+        buttonStart.setBounds(220, 220, 180, 50);
         new ButtonUtil().checkJbutton(buttonStart);
 
-        buttonGuide.setBounds(140, 250, 200, 50);
+        buttonGuide.setBounds(20, 220, 180, 50);
         new ButtonUtil().checkJbutton(buttonGuide);
 
         buttonGuide.addActionListener(e -> guideScreen.showGuide(menu));
         buttonStart.addActionListener(e -> {
             menu.setVisible(false);  // Ẩn menu
             levelScreen.showScreen(); // Hiển thị levelScreen
+        });
+        buttonLeader.setBounds(220, 280, 180, 50);
+        new ButtonUtil().checkJbutton(buttonLeader);
+        buttonExit.setBounds(20, 280, 180, 50);
+        new ButtonUtil().checkJbutton(buttonExit);
+        buttonExit.addActionListener(e -> {
+            menu.dispose();
+            System.exit(0);
         });
 
         JPanel buttonPanel = new JPanel();
@@ -46,6 +56,8 @@ public class MainMenu {
         buttonPanel.setBounds(0, 0, pic.getWidth(), pic.getHeight());
         buttonPanel.add(buttonStart);
         buttonPanel.add(buttonGuide);
+        buttonPanel.add(buttonLeader);
+        buttonPanel.add(buttonExit);
 
         pic.add(buttonPanel);
         menu.add(pic);
