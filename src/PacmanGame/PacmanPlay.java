@@ -1,15 +1,21 @@
 package PacmanGame;
 
 import Util.ButtonUtil;
-import pacManUI.FrameLock;
+import pacManUI.GameComplete;
+import pacManUI.GameOver;
+import pacManUI.LivesAndScoreBoard;
 import pacManUI.MainMenu;
 
+import javax.sound.sampled.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -60,11 +66,13 @@ public class PacmanPlay extends JPanel implements ActionListener, KeyListener {
     private JFrame gameFrame;
     private Difficulty difficulty;
     private boolean isFinished = false;
+    private Clip backgroundMusic;
     private Image wallIcon;
     private Image blueGhostIcon;
     private Image orangeGhostIcon;
     private Image pinkGhostIcon;
     private Image redGhostIcon;
+    private Image purpleGhostIcon;
 
     private Image pacmanDownIcon;
     private Image pacmanUpIcon;
@@ -84,6 +92,7 @@ public class PacmanPlay extends JPanel implements ActionListener, KeyListener {
         requestFocusInWindow();
         loadImage();
         loadMap();
+        playBackgroundMusic();
         int ghostIndex = 0;
         for (Block ghost : ghosts) {
             int speed = getSpeed(ghost);
@@ -184,6 +193,7 @@ public class PacmanPlay extends JPanel implements ActionListener, KeyListener {
         orangeGhostIcon = new ImageIcon(getClass().getResource("/image/orangeGhost.png")).getImage();
         pinkGhostIcon = new ImageIcon(getClass().getResource("/image/pinkGhost.png")).getImage();
         redGhostIcon = new ImageIcon(getClass().getResource("/image/redGhost.png")).getImage();
+        purpleGhostIcon = new ImageIcon(getClass().getResource("/image/purple-ghost.png")).getImage();
 
         pacmManIcon = new ImageIcon(getClass().getResource("/image/pacmanCircle.png")).getImage();
         pacmanDownIcon = new ImageIcon(getClass().getResource("/image/pacmanDown.png")).getImage();
@@ -247,6 +257,11 @@ public class PacmanPlay extends JPanel implements ActionListener, KeyListener {
                 else if(tileMapChar == 'T'){
                     Block teleport = new Block(x, y, tileSize, tileSize, null);
                     teleports.add(teleport);
+                }
+                else if(tileMapChar == 'z'){
+                    Block ghost = new Block( x, y, tileSize, tileSize, purpleGhostIcon);
+                    ghosts.add(ghost);
+                    ghostCount++;
                 }
 
             }
@@ -386,7 +401,7 @@ public class PacmanPlay extends JPanel implements ActionListener, KeyListener {
                 }
 
                 if (oppositeTeleport == null) {
-                    return; // Không tìm thấy ô teleport đối diện
+                    return;
                 }
 
                 int newX;
@@ -394,11 +409,11 @@ public class PacmanPlay extends JPanel implements ActionListener, KeyListener {
 
                 // Đặt vị trí mới và hướng di chuyển
                 if (teleport.getX() == 0) { // Cạnh trái
-                    newX = oppositeTeleport.getX() - tileSize; // Đặt bên trái ô teleport phải
-                    newDirection = 'A'; // Tiếp tục di chuyển trái
-                } else if (teleport.getX() == boardWidth - tileSize) { // Cạnh phải
-                    newX = oppositeTeleport.getX() + tileSize; // Đặt bên phải ô teleport trái
-                    newDirection = 'D'; // Tiếp tục di chuyển phải
+                    newX = oppositeTeleport.getX() - tileSize;
+                    newDirection = 'A';
+                } else if (teleport.getX() == boardWidth - tileSize) {
+                    newX = oppositeTeleport.getX() + tileSize;
+                    newDirection = 'D';
                 } else {
                     return; // Không ở cạnh biên
                 }
@@ -473,7 +488,6 @@ public class PacmanPlay extends JPanel implements ActionListener, KeyListener {
                     }
                 }
             } else {
-                // Ghost này di chuyển ngẫu nhiên
                 if (random.nextInt(4) < 3 || !canMoveCurrentDirection(ghost)) {
                     ArrayList<Character> validDirections = getValidDirection(ghost);
                     if (!validDirections.isEmpty()) {
@@ -489,7 +503,6 @@ public class PacmanPlay extends JPanel implements ActionListener, KeyListener {
                 }
             }
 
-            // Di chuyển ghost chỉ một lần mỗi frame
             if (isTeleporting && ghost == teleportingEntity) {
                 teleportEntity(ghost);
             } else {
@@ -498,12 +511,9 @@ public class PacmanPlay extends JPanel implements ActionListener, KeyListener {
                     int newX = ghost.getX() + ghost.getVelocityX();
                     int newY = ghost.getY() + ghost.getVelocityY();
 
-                    // Kiểm tra xem vị trí mới có trùng với ghost khác không
                     if (collideWithOtherGhost(ghost, newX, newY, ghosts)) {
-                        // Nếu trùng, chọn hướng khác từ validDirections
                         ArrayList<Character> validDirections = getValidDirection(ghost);
                         if (!validDirections.isEmpty()) {
-                            // Lọc ra các hướng không dẫn đến va chạm
                             ArrayList<Character> nonCollidingDirections = new ArrayList<>();
                             for (char dir : validDirections) {
                                 ghost.setVelocity(dir, getSpeed(ghost));
@@ -515,13 +525,11 @@ public class PacmanPlay extends JPanel implements ActionListener, KeyListener {
                             }
 
                             if (!nonCollidingDirections.isEmpty()) {
-                                // Chọn hướng không va chạm
                                 char newDirection = nonCollidingDirections.get(random.nextInt(nonCollidingDirections.size()));
                                 ghost.updateDirection(newDirection, this);
                                 ghost.setVelocity(newDirection, getSpeed(ghost));
                                 System.out.println("Ghost " + ghostIndex + " avoided collision, changed direction to " + newDirection);
                             } else {
-                                // Nếu không có hướng nào tránh được va chạm, dừng lại
                                 ghost.setVelocity(ghost.getDirection(), 0);
                                 System.out.println("Ghost " + ghostIndex + " stopped to avoid collision");
                             }
@@ -536,7 +544,6 @@ public class PacmanPlay extends JPanel implements ActionListener, KeyListener {
                 }
                 teleportEntity(ghost);
             }
-
             ghostIndex++;
         }
     }
@@ -576,7 +583,6 @@ public class PacmanPlay extends JPanel implements ActionListener, KeyListener {
             if (canMove) {
                 if (dir != oppositeDir) {
                     validDirections.add(dir);
-                    // Ưu tiên hướng ngang nếu đang đi dọc
                     if (dir == 'A' || dir == 'D') {
                         horizontalDirections.add(dir);
                     }
@@ -621,11 +627,13 @@ public class PacmanPlay extends JPanel implements ActionListener, KeyListener {
         pauseFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         pauseFrame.setResizable(false);
         pauseFrame.setLayout(null);
+        this.stopBackgroundMusic();
         pauseFrame.getContentPane().setBackground(new Color(30, 58, 138));
         JButton resumeButton = new JButton("Resume");
         resumeButton.setBounds(70, 30, 200, 50);
         new ButtonUtil().checkJbutton(resumeButton);
         resumeButton.addActionListener(e -> {
+            playBackgroundMusic();
             pauseGame = false;
             isPaused = false;
             gameLoop.start();
@@ -636,6 +644,7 @@ public class PacmanPlay extends JPanel implements ActionListener, KeyListener {
         retryButton.setBounds(70, 90, 200, 50);
         new ButtonUtil().checkJbutton(retryButton);
         retryButton.addActionListener(e -> {
+            playBackgroundMusic();
             resetGame();
             pauseGame = false;
             gameLoop.start();
@@ -759,7 +768,29 @@ public class PacmanPlay extends JPanel implements ActionListener, KeyListener {
             pacMan.setImage(pacmManIcon);
         }
     }
+    private void playBackgroundMusic() {
+        try {
+            InputStream audioStreamInput = getClass().getClassLoader().getResourceAsStream("radio/pacman.wav");
+            if (audioStreamInput == null) {
+                throw new IOException("Audio file not found: radio/videoplayback.wav");
+            }
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(new BufferedInputStream(audioStreamInput));
+            backgroundMusic = AudioSystem.getClip();
+            backgroundMusic.open(audioStream);
+            backgroundMusic.loop(Clip.LOOP_CONTINUOUSLY);
+            backgroundMusic.start();
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+            e.printStackTrace();
+            System.out.println("Error playing background music: " + e.getMessage());
+        }
+    }
 
+    public void stopBackgroundMusic() {
+        if (backgroundMusic != null && backgroundMusic.isRunning()) {
+            backgroundMusic.stop();
+            backgroundMusic.close();
+        }
+    }
     @Override
     public void actionPerformed(ActionEvent e) {
         //pacmanMove();

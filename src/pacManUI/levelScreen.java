@@ -16,7 +16,7 @@ public class levelScreen {
     private final JButton buttonBack = new JButton("Back");
     private final MainMenu mainMenu;
     public levelScreen(MainMenu mainMenu) {
-        this.mainMenu = mainMenu;// Tham chiếu tới Test để quay lại
+        this.mainMenu = mainMenu;
         setupLevelScreen();
     }
 

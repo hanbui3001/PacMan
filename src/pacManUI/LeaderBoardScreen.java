@@ -42,9 +42,8 @@ public class LeaderBoardScreen extends JPanel {
         new ButtonUtil().checkJbutton(mainMenuButton);
         mainMenuButton.setBounds(180, 450, 210, 40);
         mainMenuButton.addActionListener(e -> {
-            // Đóng gameFrame và hiển thị lại MainMenu
             gameFrame.dispose();
-            mainMenu.showMainMenu(); // Sử dụng phương thức showMainMenu() của MainMenu
+            mainMenu.showMainMenu();
         });
         add(mainMenuButton);
 

@@ -1,5 +1,6 @@
 package PacmanGame;
 
+import pacManUI.LivesAndScoreBoard;
 import pacManUI.MainMenu;
 
 import javax.swing.*;
@@ -14,7 +15,7 @@ public class PacmanMain {
     private JFrame frame = new JFrame("Pac Man");
     private JPanel gamePanel = new JPanel();
     private JPanel scorePanel = new JPanel();
-    private PacmanPlay pacmanPlay; // Lưu tham chiếu đến PacmanPlay
+    private PacmanPlay pacmanPlay;
     private LivesAndScoreBoard livesAndScoreBoard;
     private MainMenu mainMenu;
     private Difficulty difficulty;
@@ -38,7 +39,7 @@ public class PacmanMain {
 
     public void setUpPacman() {
         livesAndScoreBoard = new LivesAndScoreBoard();
-        pacmanPlay = new PacmanPlay(livesAndScoreBoard, mainMenu, frame, difficulty); // Khởi tạo và lưu tham chiếu
+        pacmanPlay = new PacmanPlay(livesAndScoreBoard, mainMenu, frame, difficulty);
         gamePanel.setPreferredSize(new Dimension(boardWidth, boardHeight));
         gamePanel.setLayout(new BorderLayout());
         gamePanel.add(pacmanPlay, BorderLayout.CENTER);
@@ -54,7 +55,7 @@ public class PacmanMain {
 
         frame.pack();
         frame.setLocationRelativeTo(null);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setResizable(false);
         frame.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override

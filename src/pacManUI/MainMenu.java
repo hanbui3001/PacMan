@@ -43,7 +43,7 @@ public class MainMenu {
         });
         buttonStart.addActionListener(e -> {
             menu.setVisible(false);
-            levelScreen.showScreen(); // Hiển thị levelScreen
+            levelScreen.showScreen();
         });
         buttonLeader.setBounds(220, 280, 180, 50);
         new ButtonUtil().checkJbutton(buttonLeader);

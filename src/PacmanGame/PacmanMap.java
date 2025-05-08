@@ -13,7 +13,7 @@ public class PacmanMap {
                     "X    X       X    X",
                     "X XX XXXX XXXX XX X",
                     "X XX X       X XX X",
-                    "X XX X XXrXX X XX X",
+                    "X XX X XX rXX X XX X",
                     "X       bpo       X",
                     "X XX X XXXXX X XX X",
                     "X    X       X    X",
